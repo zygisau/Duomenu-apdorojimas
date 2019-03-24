@@ -8,7 +8,9 @@ bool sortByName(const student & stud1, const student & stud2) {
     return (stud1.name < stud2.name) ||
            ((stud1.name == stud2.name) && (stud1.surname > stud2.surname));
 }
-void sortStudents(vector<student>& students) {
+
+template <typename container>
+void sortStudents(container &students) {
     sort(students.begin(), students.end(), sortByName);
 }
 void printResult(vector<student>students, int maxString) {
@@ -33,7 +35,8 @@ void printResult(vector<student>students, int maxString) {
     }
 }
 
-void printToFile (vector<student>students, int maxString, string fileName) {
+template <typename container>
+void printToFile (const container &students, int maxString, string fileName) {
     std::ofstream file (fileName);
 
     file << left << setw(maxString+20) << "Vardas" << setw(maxString+20) << "Pavardė" << setw(maxString+20) << "Galutinis (Vid.)" << setw(maxString+20) << "Galutinis (Med.)" << endl;
@@ -54,22 +57,82 @@ void printToFile (vector<student>students, int maxString, string fileName) {
     file.close();
 }
 
-void filterStudents (vector<student>& students, vector<student>& vargsiukai) {
-    try {
-        vargsiukai.reserve(50);
-    } catch (const std::exception& error) {
-        vargsiukai.reserve(10);
+// Patikrina, ar studentas gavo skolą (yra vargšiukas)
+bool gavoSkola (const student & stud) {
+    if (stud.galutinis < 5) {
+        return true;
     }
-    for (int i=0; i<students.size(); i++) {
-        if (students[i].vargsiukas) {
-            vargsiukai.push_back(students[i]);
-            students.erase(students.begin() + i);
-            i--;
-        }
-    }
-    students.shrink_to_fit();
-    vargsiukai.shrink_to_fit();
+        return false;
 }
+
+// minkštus studentus nukopijuoja į naują vektorių ir ištrina iš seno
+vector<student> raskMinkstus(vector<student> &students) {
+    vector<student> minksti;
+    vector<student>::size_type i = 0;
+
+    // invariantas: vektoriaus `studentai` elementai [0, i) yra "kieti"
+    while (i != students.size()) {
+        if (gavoSkola(students[i])) {
+            minksti.push_back(students[i]);
+            students.erase(students.begin() + i);  // ištrinti i-ąjį stud.
+        } else
+            ++i;  // pereiti prie kito studento
+    }
+    return minksti;  // grąžina studentus gavusius skolą
+}
+
+vector<student> iterpkKietus(vector<student> &students) {
+    vector<student> minksti;
+    vector<student>::size_type i = 0;
+    int bound = 0; // nuo kurios vietos vektoriuje pasibaigia "kieti" studentai
+    student stud; // laikinas studento elementas
+
+    // invariantas: vektoriaus `studentai` elementai [0, i) yra "kieti"
+    while (i != students.size()) {
+        stud = students[i];
+        if (gavoSkola(stud)) {
+            minksti.push_back(stud);
+        } else {
+            students.insert(students.begin(), stud); // iterpia negavusį skolos studentą į pradžią
+            bound++;
+            ++i;  // eilė pasislenka, taigi, indeksas irgi turi pasislinkti
+        }
+        ++i;  // pereiti prie kito studento
+    }
+
+    if (bound != 0)
+        students.resize( bound );
+
+    students.shrink_to_fit();
+    return minksti;  // grąžina studentus gavusius skolą
+}
+
+deque<student> iterpkKietus(deque<student> &students) {
+    deque<student> minksti;
+    deque<student>::size_type i = 0;
+    int bound = 0; // nuo kurios vietos vektoriuje pasibaigia "kieti" studentai
+    student stud; // laikinas studento elementas
+
+    // invariantas: vektoriaus `studentai` elementai [0, i) yra "kieti"
+    while (i != students.size()) {
+        stud = students[i];
+        if (gavoSkola(stud)) {
+            minksti.push_back(stud);
+        } else {
+            students.push_front( stud ); // iterpia negavusį skolos studentą į pradžią
+            bound++;
+            ++i;  // eilė pasislenka, taigi, indeksas irgi turi pasislinkti
+        }
+        ++i;  // pereiti prie kito studento
+    }
+
+    if (bound != 0)
+        students.resize( bound );
+
+    students.shrink_to_fit();
+    return minksti;  // grąžina studentus gavusius skolą
+}
+
 
 void generateFile(string fileName, int size) {
     const unsigned int seed = time(0);
@@ -89,4 +152,60 @@ void generateFile(string fileName, int size) {
     cout << "BAIGTA" << endl;
 
     file.close();
+}
+
+// Patikrina, ar pažymys yra skaičius ir ar tinkamas kaip pažymys
+int checkGrade(string &param, const string& message) {
+    int paramInt;
+
+    try {
+        paramInt = std::stoi(param);
+
+        while(paramInt > 10) { // Ar atitinka dešimtbalę sistemą?
+            cout << message << endl;
+            cout << "Pažymys per didelis dešimtbalei sistemai." << endl;
+            cout << "Pažymys: ";
+            cin >> paramInt;
+            wasStringGivenInsteadInt(paramInt);
+        }
+
+    } catch (const std::invalid_argument & e) {
+        cout << message;
+        cin >> paramInt;
+        wasStringGivenInsteadInt(paramInt);
+
+        while(paramInt > 10) { // Ar atitinka dešimtbalę sistemą?
+            cout << "Pažymys per didelis dešimtbalei sistemai." << endl;
+            cout << "Pažymys: ";
+            cin >> paramInt;
+            wasStringGivenInsteadInt(paramInt);
+        }
+    }
+
+    return paramInt;
+}
+
+// Ar pažymių užtenka, nes paskutinis pažymys visada bus egzaminas
+void checkGradesCount(vector<int>& grades, const string& fname, const string& lname) {
+    int grade;
+
+    if (grades.size() <= 1) {
+        cout << "Studentui " << fname << " " << lname << " trūksta pažymių, įrašykite dar egzamino pažymį. \nJei vykdote spartos analizę, ši klaida gali sugadinti rezultatus. Kad to išvengtumėte, rekomenduojame dar kartą patikrinti, ar duomenų faile nėra klaidų ir paleisti programą iš naujo. ARBA \n";
+
+        // Prašoma įvesti du pažymius
+        for (int i = 1; i <= 2; i++) {
+            cout << "Įrašykite pažymį: ";
+            cin >> grade;
+            wasStringGivenInsteadInt(grade);
+
+            while (grade > 10) { // Ar atitinka dešimtbalę sistemą?
+                cout << "Pažymys per didelis dešimtbalei sistemai." << endl;
+                cout << "Pažymys: ";
+                cin >> grade;
+                wasStringGivenInsteadInt(grade);
+            }
+
+            grades.push_back(grade);
+        }
+    }
 }

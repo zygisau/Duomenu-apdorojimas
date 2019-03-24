@@ -12,8 +12,10 @@
 #include <fstream>
 #include <chrono>
 #include <numeric>
+#include <memory>
+#include <deque>
 using std::cout; using std::cin; using std::endl; using std::string; using std::setw; using std::left; using std::setprecision; using std::fixed;
-using std::sort; using std::stoi; using std::vector; using std::ifstream;
+using std::sort; using std::stoi; using std::vector; using std::ifstream; using std::deque;
 
 void wasStringGivenInsteadInt(int &param) {
     while (cin.fail()) { // ciklas, kol bus įvestas skaičius
@@ -32,27 +34,37 @@ struct student {
     double galutinis=0; // Galutinis studento pažymys
     double galutinisMedian = 0;
     int numberOfGrades=0;
-    bool vargsiukas=false;
+//    bool vargsiukas=false;
 
     void getGrades() {
         grades.reserve(5);
         int input;
+        bool stop = false;
 
-        while (numberOfGrades <= 0) { // kol neirasytas nei vienas pazymys
+        do { // Kol nenustoja rašyti skaičių
             cout << "Pažymys: ";
-            while (cin >> input) { // kol raso pazymius, kad nustotu, turi parasyti ne skaiciu, kas reikstu false
-                if (input <= 10) {
+            cin >> input;
+            if (!cin.fail()) { // kol rašo pažymius, kad nustotų, turi parašyti ne skaičių
+                if (input > 0 && input <= 10) {
                     numberOfGrades++;
                     grades.push_back(input);
                 } else {
-                    cout << "Parametras per didelis dešimtbalei sistemai. Prašome pateikti teisingą parametrą. " << endl;
+                    cout << "Parametras netinkamas dešimtbalei sistemai. Prašome pateikti teisingą parametrą. "
+                         << endl;
+                }
+            } else {
+                stop = true;
+                if ( numberOfGrades <= 0 ) { // Ar yra bent vienas pažymys?
+                    cout << "Privalo būti įrašytas bent vienas pažymys";
+                    stop = false;
                 }
             }
+
             cin.clear();
-        }
+            cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        } while ( !stop );
 
         cin.clear();
-        cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         numberOfGrades++; // Šis kintamasis toliau naudojamas kaip masyvo elementų skaičius, kuris turi būti didesnis nei auksčiausias masyvo elementų indeksas
     }
 
@@ -83,9 +95,9 @@ struct student {
         multiplier = getAverage();
         galutinis = 0.4 * multiplier + 0.6 * exam;
 
-        if (galutinis < 5.0) { // rūšiavimas į kategorijas
-            vargsiukas = true;
-        }
+//        if (galutinis < 5.0) { // rūšiavimas į kategorijas
+//            vargsiukas = true;
+//        }
 
         multiplier = getMedian();
         galutinisMedian = 0.4 * multiplier + 0.6 * exam;
@@ -113,6 +125,7 @@ struct student {
     }
 };
 
+// Klasė, matuojanti laiką
 class Timer { // paimta iš https://github.com/objprog/paskaitos2019/wiki/Laiko-matavimas
 private:
     std::chrono::time_point<std::chrono::high_resolution_clock> start;

@@ -3,7 +3,8 @@
 #include "readFromFile.cpp"
 #include "readFromUser.cpp"
 //
-void speedTest(vector<student> students, vector<student> vargsiukai) {
+template <typename container>
+void speedTest(container students, container vargsiukai) {
     cout.flush();
     Timer t;
     readFromFile(students, vargsiukai, "kursiokai10.txt");
@@ -24,6 +25,22 @@ void speedTest(vector<student> students, vector<student> vargsiukai) {
     t.reset();
     readFromFile(students, vargsiukai, "kursiokai100000.txt");
     cout << "Darbas su \"kursiokai100000.txt\" užtruko: " << t.elapsed() << " s" << endl;
+}
+
+void containerTest(vector<student> &students, vector<student> &vargsiukai) {
+    cout << "Pradedamas darbas su STD::VECTOR.." << endl;
+    Timer t;
+    speedTest(students, vargsiukai);
+    cout << "Darbas su STD::VECTOR truko " << t.elapsed() << " s" << endl;
+
+    cout << endl;
+
+    cout << "Pradedamas darbas su STD:DEQUE.." << endl;
+    deque<student> studentsDeque;
+    deque<student> vargsiukaiDeque;
+    t.reset();
+    speedTest(studentsDeque, vargsiukaiDeque);
+    cout << "Darbas su STD::DEQUE truko " << t.elapsed() << " s" << endl;
 }
 
 //
@@ -82,7 +99,20 @@ void menu(vector<student>& students, vector<student>& vargsiukai) {
         }
 
         if (inputSelection == 1) {
-            speedTest(students, vargsiukai);
+            cout << "Ar naudoti std::vector IR std::deque konteinerius? (1 - taip, 0 - ne, jei naudoti tik std::vector) ";
+            cin >> inputSelection;
+            wasStringGivenInsteadInt(inputSelection);
+
+            while (inputSelection != 1 && inputSelection != 0) { // Ar įvestis tinkama
+                cout << "Ar naudoti std::vector IR std::deque konteinerius? (1 - taip, 0 - ne, jei naudoti tik std::vector) ";
+                cin >> inputSelection;
+                cout << endl;
+            }
+            if (inputSelection == 1) {
+                containerTest(students, vargsiukai);
+            } else {
+                speedTest(students, vargsiukai);
+            }
         } else {
             readFromFile(students, vargsiukai, "kursiokai.txt");
         }

@@ -2,14 +2,26 @@
 
 #define FUNCTIONS_H
 
-void speedTest(vector<student> students, vector<student> vargsiukai);
+int checkGrade(string &param, const string& message);
+void checkGradesCount(vector<int>& grades, const string& fname, const string& lname);
+
+template <typename container>
+void speedTest(container students, container vargsiukai);
+
 void compareStrings(int& base, const string& string);
 bool sortByName(const student & stud1, const student & stud2);
-void sortStudents(vector<student>& students);
+
+template <typename container>
+void sortStudents(container &students);
+
 void printResult(vector<student>students, int maxString);
-void filterStudents(vector<student>& students, vector<student>& vargsiukai);
+bool gavoSkola (const student & stud);
+vector<student> raskMinkstus(vector<student> &students);
+vector<student> iterpkKietus(vector<student> &students);
 void generateFile(string fileName, int size);
-void printToFile(vector<student>students, int maxString, string fileName);
+
+template <typename container>
+void printToFile (const container &students, int maxString, string fileName);
 
 #include "functions.cpp"
 

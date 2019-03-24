@@ -1,40 +1,68 @@
 #include "functions.h"
 
-void readFromFile(vector<student> students, vector<student> vargsiukai, const string& fileName) {
+template < typename container >
+void readFromFile(container students, container vargsiukai, const string& fileName) {
     ifstream fd (fileName);
-    students.reserve(30);
+//    students.reserve(30);
 
     string info;
-    int ind = 0, grade, maxString = 0;
+    int gradeInt, maxString = 0;
+    string gradeStr, message;
+    student stud;
+
+    if (fd.fail()) {
+        cout << "Įvyko klaida atidarant duomenų failą. Prašome įsitikinti, ar failas tinkamoje direktorijoje." << endl;
+        exit(EXIT_FAILURE);
+    }
+
     std::getline(fd, info);
+
+// Susižinome kiek pažymių gali būti daugiausiai faile
+    std::istringstream reading(info);
+    string testInfo;
+    int gradesCount = -2;
+    while(reading >> testInfo) { // einama, kol pasiekiamas eilutės galas
+        gradesCount++;
+    }
+// Rezervuojame didžiausią galimą pažymių skaičių
+    stud.grades.reserve(gradesCount);
 
     while (std::getline(fd, info)) {
         std::istringstream reading(info);
 
-        students.push_back(student()); //emplace_back
+        reading >> stud.name;
+        compareStrings(maxString, stud.name);
 
-        reading >> students[ind].surname;
-        compareStrings(maxString, students[ind].surname);
+        reading >> stud.surname;
+        compareStrings(maxString, stud.surname);
 
-        reading >> students[ind].name;
-        compareStrings(maxString, students[ind].name);
+        // Klaidos žinutė
+        message = "Pažymys studentui " + stud.name + " " + stud.surname + " neįrašytas. \nJei vykdote spartos analizę, ši klaida gali sugadinti rezultatus. Kad to išvengtumėte, rekomenduojame dar kartą patikrinti, ar duomenų faile nėra klaidų ir paleisti programą iš naujo. \n ARBA Įrašykite pažymį: ";
 
-        while (reading) {
-            reading >> grade;
-            students[ind].grades.push_back(grade);
+        while (!reading.eof()) { // kol nepasibaigs eilutė
+            reading >> gradeStr;
+            gradeInt = checkGrade(gradeStr, message);
+            stud.grades.push_back(gradeInt);
         }
+        checkGradesCount(stud.grades, stud.name, stud.surname);
 
-        students[ind].exam = students[ind].grades.back();
-        students[ind].grades.pop_back();
-        students[ind].getGalutinis();
+        stud.exam = stud.grades.back();
+        stud.grades.pop_back();
+        stud.getGalutinis();
+        stud.grades.clear();
 
-        ind++;
+        students.push_back(stud);
+//        students.insert(students.end(), stud);
+        stud = {};
     }
     fd.close();
 
     students.shrink_to_fit();
     sortStudents(students);
-    filterStudents(students, vargsiukai);
+
+    Timer time;
+    vargsiukai = iterpkKietus(students);
+    cout << "Studentų filtravimas truko: " << time.elapsed()  << " s" << endl;
 
     printToFile(students, maxString, "kietuoliai.txt");
     printToFile(vargsiukai, maxString, "vargsiukai.txt");
