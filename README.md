@@ -1,4 +1,4 @@
-# Duomenų apdorojimas
+# Duomenų apdorojimas (Papildoma užduotis)
 ![version][version-badge]
 ## Programos paskirtis
 Programa simuliuoja studentų pažymių sistemą. 
@@ -60,6 +60,17 @@ Emilis       Pavardė9     2.20                   2.00
 Gabija       Pavardė15    5.80                   5.80
 Giedrius     Pavardė17    7.93                   8.40
 Giedrė       Pavardė18    3.40                   3.20   
+```
+
+## :exclamation: PAPILDOMA UŽDUOTIS :exclamation:
+Pakeista studentų filtravimo funkcija.
+- Pirmiausia reikėjo pridėti funkciją raskMinkstus(), nes praeita realizacija buvo kitokia.
+- Tuomet realizavus papildomos užduoties funkciją, buvo pridėtas ir abi funkcijas analizuojantis matavimas. Kad jį pasirinktume, reikia pasirinkti spartos analizę, naudojant std::vector bei std::deque konteinerius.
+```shell
+Ar reikia generuoti tekstinius failus "kursiokaiXX.txt"? (1 - taip, 0 - ne) 0
+Įvedinėsite duomenis ranka ar iš failo? (1 - ranka, 0 - iš failo)0
+Ar norite atlikti programos veikimo greičio (spartos) analizę? (1 - taip, 0 - ne) 1
+Ar naudoti std::vector IR std::deque konteinerius? (1 - taip, 0 - ne, jei naudoti tik std::vector) 1
 ```
 
 ## Programos paleidimas
@@ -128,5 +139,14 @@ Paleisti programą galima keliais būdais.
 
   - Pridėta biblioteka "numeric", naudojama funkcijoje. Programa veiks naudojant visus kompiliatorius.
 
+### [v0.4.2]() - (2019-03-24)
+  #### PAPILDOMA UŽDUOTIS
+  **Pridėta**
 
-[version-badge]: https://img.shields.io/badge/version-0.4.1-blue.svg
+  - Pridėta papildoma užduotis.
+  
+  **Koreguota**
+  
+  - Pakoreguotas failo nuskaitymas ir pažymių įrašymas ranka.
+
+[version-badge]: https://img.shields.io/badge/version-0.4.2-blue.svg
