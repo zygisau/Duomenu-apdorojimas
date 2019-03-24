@@ -74,18 +74,15 @@ Ar naudoti std::vector IR std::deque konteinerius? (1 - taip, 0 - ne, jei naudot
 ```
 
 ## Programos paleidimas
-Paleisti programą galima keliais būdais.
-- `git clone git@github.com:zygisau/Duomenu-apdorojimas.git` <-- jei naudojate SSH key
-- `git clone https://github.com/zygisau/Duomenu-apdorojimas.git` <-- kitu atveju
-- `cd Duomenu-apdorojimas`
-- Jei leidžiate UNIX aplinkoje
-  - `make` <-- jei norite, jog programa veiktų, naudodama VEKTORIUS
-  - `make masyvas` <-- jei norite, jog programa veiktų, naudodama MASYVUS
-  - `make clean` <--jei reikia ištrinti **.o**, **.exe** failus
-  - `make cleanAll` <--jei reikia ištrinti **.o**, **.exe** BEI klasiokai\* failus išskyrus klasiokai.txt
-- Jei naudojate CMAKE, naudoti reikia CMakeLists.txt failą
-> Naudojant CMAKE, naudoti masyvus kol kas neįmanoma.
-
+Paleisti programą galima keliais būdais.  
+- `git clone git@github.com:zygisau/Duomenu-apdorojimas.git` <-- jei naudojate SSH key  
+- `git clone https://github.com/zygisau/Duomenu-apdorojimas.git` <-- kitu atveju  
+- `cd Duomenu-apdorojimas`  
+- Jei naudojate CMAKE, naudoti reikia CMakeLists.txt failą.
+Yra du *executables*:
+  - Duomenu_apdorojimas <-- pasirinkite, jei norite paleisti programą, kuri naudoja konteinerius
+  - Duomenu_apdorojimas_masyvai <-- pasirinkite, jei norite paleisti programą, kuri naudoja dinaminį masyvą
+  
 ## Versijų istorija (changelog)
 
    ### [v0.1](https://github.com/zygisau/Duomenu-apdorojimas/releases/tag/v0.1) - (2019-02-17)
