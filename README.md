@@ -71,6 +71,33 @@ Ar reikia generuoti tekstinius failus "kursiokaiXX.txt"? (1 - taip, 0 - ne) 0
 Įvedinėsite duomenis ranka ar iš failo? (1 - ranka, 0 - iš failo)0
 Ar norite atlikti programos veikimo greičio (spartos) analizę? (1 - taip, 0 - ne) 1
 Ar naudoti std::vector IR std::deque konteinerius? (1 - taip, 0 - ne, jei naudoti tik std::vector) 1
+
+Pradedamas darbas su STD::VECTOR..
+Studentų filtravimas truko: 0.000502 s
+Darbas su "kursiokai10.txt" užtruko: 0.021824 s
+Studentų filtravimas truko: 0.001486 s
+Darbas su "kursiokai100.txt" užtruko: 0.027778 s
+Studentų filtravimas truko: 0.105622 s
+Darbas su "kursiokai1000.txt" užtruko: 0.15872 s
+Studentų filtravimas truko: 10.2246 s
+Darbas su "kursiokai10000.txt" užtruko: 10.6323 s
+Studentų filtravimas truko: 959.495 s
+Darbas su "kursiokai100000.txt" užtruko: 962.593 s
+Darbas su STD::VECTOR truko 973.438 s
+
+Pradedamas darbas su STD:DEQUE..
+Studentų filtravimas truko: 0 s
+Darbas su "kursiokai10.txt" užtruko: 0.009919 s
+Studentų filtravimas truko: 0 s
+Darbas su "kursiokai100.txt" užtruko: 0.009921 s
+Studentų filtravimas truko: 0.000496 s
+Darbas su "kursiokai1000.txt" užtruko: 0.049105 s
+Studentų filtravimas truko: 0.003968 s
+Darbas su "kursiokai10000.txt" užtruko: 0.2852 s
+Studentų filtravimas truko: 0.040673 s
+Darbas su "kursiokai100000.txt" užtruko: 3.11736 s
+Darbas su STD::DEQUE truko 3.47399 s
+
 ```
 
 ## Programos paleidimas
