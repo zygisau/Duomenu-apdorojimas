@@ -139,7 +139,7 @@ Paleisti programą galima keliais būdais.
 
   - Pridėta biblioteka "numeric", naudojama funkcijoje. Programa veiks naudojant visus kompiliatorius.
 
-### [v0.4.2]() - (2019-03-24)
+### [v0.4.2](https://github.com/zygisau/Duomenu-apdorojimas/releases/tag/v0.4.2) - (2019-03-24)
   #### PAPILDOMA UŽDUOTIS
   **Pridėta**
 
